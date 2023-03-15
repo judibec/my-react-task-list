@@ -1,34 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import Header from "./components/Header"
+import { TaskList } from "./components/TaskList";
+import React, {useState} from "react";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState([]);
+  const [value, setValue] = useState('');
+  
+  function handleChange(event) {
+    setValue(event.target.value);
+  }
 
-  return (
+  function handleSubmit(event){
+    event.preventDefault();
+    setItems([...items, { name: value}]);
+    setValue('')
+  }
+
+  function handleDeleteAll(){
+    setItems([]);
+  }
+
+  function handleDeleteItem(itemToDelete){
+    const newList = items.filter(item => item.name !== itemToDelete);
+    setItems(newList)
+  }
+
+  return(
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Header />
+      <form onSubmit={handleSubmit}>
+        <input type= "text" value = {value} onChange={handleChange}></input>
+        <button type="submit">Agregar</button>
+      </form>
+      <TaskList list={items} onDeleteTask={handleDeleteItem}/>
+      <button onClick={handleDeleteAll}>Delete All</button>
     </div>
-  )
+  );
 }
 
 export default App
