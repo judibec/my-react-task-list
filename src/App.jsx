@@ -1,6 +1,6 @@
 import Header from "./components/Header"
 import { TaskList } from "./components/TaskList";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 
 
 function App() {
@@ -13,16 +13,31 @@ function App() {
 
   function handleSubmit(event){
     event.preventDefault();
-    setItems([...items, { name: value}]);
-    setValue('')
+    let tasks = [...items]
+    if(!tasks.includes(value)){
+      tasks = [...tasks,{ name: value}]
+      setValue('')
+    }
+    setItems(tasks)
+    localStorage.setItem('tasks',JSON.stringify(tasks));
   }
 
+  useEffect(()=>{
+    const localStorageTasks = localStorage.getItem('tasks');
+    const storedTasks = JSON.parse(localStorageTasks);
+    if(storedTasks!==null){
+      setItems(storedTasks)
+    }
+  },[])
+
   function handleDeleteAll(){
+    localStorage.clear()
     setItems([]);
   }
 
   function handleDeleteItem(itemToDelete){
     const newList = items.filter(item => item.name !== itemToDelete);
+    localStorage.setItem('tasks',JSON.stringify(newList))
     setItems(newList)
   }
 
