@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { useTaskList } from "../hooks/useTaskLists";
 import { Task } from "./Task";
 
 export const TaskList = (props) => {
     const {list, onDeleteTask} = props
-    const [completed, setCompleted] = useState([]);
+    const [completed, addComplete] = useTaskList();
 
 
     const handleDelete = (nameTask) =>{
@@ -12,29 +13,32 @@ export const TaskList = (props) => {
         onDeleteTask(nameTask)
     }
 
-    const handleChecked = (boolean,nameTask) =>{
-
-        let newCompleted = [...completed]
-
-        if(!completed.includes(nameTask) && !boolean){
-            newCompleted = [...newCompleted,nameTask]
-        }else{
-            newCompleted = newCompleted.filter(task => nameTask != task)
-        }
-
-        setCompleted(newCompleted)
-        localStorage.setItem('completed',JSON.stringify(newCompleted));
+    function handleChecked(boolean,nameTask){
+        addComplete(boolean,nameTask);
     }
 
-    useEffect(()=>{
-        const localStorageData = localStorage.getItem('completed');
-        const storedCompleted = JSON.parse(localStorageData);
-        if(storedCompleted!=null){
-            setCompleted(storedCompleted)
-        }
-    },[])
+    // const handleChecked = (boolean,nameTask) =>{
 
-    console.log(completed)
+    //     let newCompleted = [...completed]
+
+    //     if(!completed.includes(nameTask) && !boolean){
+    //         newCompleted = [...newCompleted,nameTask]
+    //     }else{
+    //         newCompleted = newCompleted.filter(task => nameTask != task)
+    //     }
+
+    //     setCompleted(newCompleted)
+    //     localStorage.setItem('completed',JSON.stringify(newCompleted));
+    // }
+
+    // useEffect(()=>{
+    //     const localStorageData = localStorage.getItem('completed');
+    //     const storedCompleted = JSON.parse(localStorageData);
+    //     if(storedCompleted!=null){
+    //         setCompleted(storedCompleted)
+    //     }
+    // },[])
+
     return(
         <ul>
             {list.map((task)=>(
