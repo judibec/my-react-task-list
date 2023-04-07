@@ -8,16 +8,37 @@ import Modal from "react-modal";
 function App() {
   const [items, addItems, deleteItem, deleteAll] = useCreateTask([]);
   const [value, setValue] = useState('');
+  const [description, setDesciption] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  
+  const [formValidation, setFormValidation] = useState({
+    task:undefined,
+    description:undefined,
+  })
+
   function handleChange(event) {
-    setValue(event.target.value);
+    const val = event.target.value;
+    setFormValidation({
+      ...formValidation,
+      task:val.length < 3? "task is too short":"",
+    })
+    setValue(val);
+
+  }
+
+  function handleDescriptionChange(event){
+    const val = event.target.value;
+    setFormValidation({
+      ...formValidation,
+      description:val.length === 0? "Description is required":"",
+    })
+    setDesciption(val);
   }
 
   function handleSubmit(event){
     event.preventDefault();
     addItems(value)
     setValue("")
+    setDesciption("")
     handleCloseModal();
     // let tasks = [...items]
     // if(!tasks.includes(value)){
@@ -50,8 +71,11 @@ function App() {
   };
 
   const handleCloseModal = () => {
+    setFormValidation({task:undefined,description:undefined})
     setIsOpen(false);
   };
+
+  const isValid = Object.keys(formValidation).every(key=>formValidation[key]==="")
 
   return(
     <div className="App">
@@ -59,8 +83,19 @@ function App() {
       <button onClick={handleOpenModal}>Agregar</button>
       <Modal isOpen={isOpen} onRequestClose={handleCloseModal}>
       <form onSubmit={handleSubmit}>
-        <input type= "text" value = {value} onChange={handleChange}></input>
-        <button type="submit">Agregar</button>
+        <div>
+          <label> Task
+            <input type= "text" value = {value} onChange={handleChange}></input>
+          </label>
+          <span role = "alert" style={{color:"red"}}>{formValidation.task}</span>
+        </div>
+        <div>
+          <label> Description
+            <input type= "text" value = {description} onChange={handleDescriptionChange}></input>
+          </label>
+          <span role = "alert" style={{color:"red"}}>{formValidation.description}</span>
+        </div>
+        <button disabled={!isValid} type="submit">Agregar</button>
         </form>
       </Modal>
       
