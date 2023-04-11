@@ -42,7 +42,7 @@ export const TaskList = (props) => {
     return(
         <ul>
             {list.map((task)=>(
-                <Task name = {task.name} onDelete={handleDelete}
+                <Task name = {task.name} onDelete={handleDelete} taskDescrip = {task.description}
                 isTaskChecked = {handleChecked}
                 isCompleted = {completed.includes(task.name)}
                 />

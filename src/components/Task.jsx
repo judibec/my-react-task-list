@@ -1,7 +1,9 @@
+import { DeleteIcon } from "@chakra-ui/icons";
+import { Button, IconButton } from "@chakra-ui/react";
 import React, {useState} from "react";
 
 export const Task = (props) =>{
-    const {name, onDelete, isTaskChecked, isCompleted} = props;
+    const {name, onDelete, taskDescrip, isTaskChecked, isCompleted} = props;
 
     const [isChecked, setIsChecked] = useState(isCompleted);
 
@@ -20,7 +22,8 @@ export const Task = (props) =>{
         <article>
         <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange}/>
         <label htmlFor="myCheckbox" style={{textDecoration: isChecked ? "line-through" : ''}}> {name} </label>
-          <button onClick={handleDeleteItem}>Delete</button>
+        <label>{taskDescrip}</label>
+          <IconButton onClick={handleDeleteItem} icon={<DeleteIcon/>} colorScheme="red" variant="outline" size={"sm"}>Delete</IconButton>
         </article>
       </li>
     )
